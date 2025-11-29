@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <title>叶星星 · 3D 粒子光效生日快乐</title>
+  <meta charset="UTF-8" />
+  <title>祝笑盈 · 考研顺利上岸</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     * {
       margin: 0;
@@ -11,525 +12,419 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
       height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui,
+        "PingFang SC", "Microsoft YaHei", sans-serif;
+      /* 更偏温柔一点的渐变色 */
+      background: radial-gradient(circle at top, #ffe1f0 0%, #f8c3d9 22%, #9b87ff 70%, #2b1055 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff7f5;
       overflow: hidden;
-      color: #fff;
-      background: radial-gradient(circle at 10% 0%, #ff9a9e 0%, #fad0c4 25%, #fbc2eb 50%, #a6c1ee 75%, #89f7fe 100%);
-      background-size: 300% 300%;
-      animation: gradient-flow 20s ease-in-out infinite;
     }
 
-    @keyframes gradient-flow {
-      0%   { background-position: 0% 0%; }
-      50%  { background-position: 100% 100%; }
-      100% { background-position: 0% 0%; }
+    body.blessing {
+      animation: bgGlow 6s ease-in-out infinite alternate;
     }
 
-    /* 粒子光效画布 */
-    #particles {
+    @keyframes bgGlow {
+      from { filter: brightness(1); }
+      to   { filter: brightness(1.16); }
+    }
+
+    /* 背景星光层，可以稍微加点朦胧感 */
+    .star-layer {
       position: fixed;
       inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
       pointer-events: none;
-    }
-
-    .scene {
-      position: relative;
-      width: 100%;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      perspective: 1200px;
-      overflow: hidden;
-      z-index: 1; /* 在粒子之上 */
-    }
-
-    /* 背景光晕 */
-    .scene::before {
-      content: "";
-      position: absolute;
-      width: 80vmax;
-      height: 80vmax;
-      background: radial-gradient(circle, rgba(255,255,255,0.35), transparent 60%);
-      filter: blur(18px);
-      mix-blend-mode: screen;
-      top: -20vmax;
-      left: -20vmax;
-      opacity: 0.7;
-      animation: halo-move 18s linear infinite alternate;
-    }
-
-    @keyframes halo-move {
-      0%   { transform: translate3d(0, 0, 0); }
-      100% { transform: translate3d(10vmax, 10vmax, 0); }
-    }
-
-    /* 三维旋转光环 */
-    .ring {
-      position: absolute;
-      border-radius: 999px;
-      border: 1.6px solid rgba(255, 255, 255, 0.65);
-      box-shadow: 0 0 18px rgba(255,255,255,0.45);
-      opacity: 0.6;
-      transform-style: preserve-3d;
       z-index: 0;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(255,255,255,0.45) 0, transparent 45%),
+        radial-gradient(circle at 80% 10%, rgba(255,255,255,0.3) 0, transparent 50%),
+        radial-gradient(circle at 50% 80%, rgba(255,255,255,0.32) 0, transparent 55%);
+      opacity: 0.23;
+      mix-blend-mode: screen;
     }
 
-    .ring-1 {
-      width: 420px;
-      height: 420px;
-      top: 12%;
-      left: 8%;
-      animation: ring-spin-1 26s linear infinite;
-    }
-
-    .ring-2 {
-      width: 520px;
-      height: 520px;
-      bottom: -6%;
-      right: 4%;
-      animation: ring-spin-2 32s linear infinite;
-    }
-
-    @keyframes ring-spin-1 {
-      0%   { transform: rotateX(72deg) rotateZ(0deg) translateZ(-140px); }
-      50%  { transform: rotateX(72deg) rotateZ(180deg) translateZ(-80px); }
-      100% { transform: rotateX(72deg) rotateZ(360deg) translateZ(-140px); }
-    }
-
-    @keyframes ring-spin-2 {
-      0%   { transform: rotateX(68deg) rotateZ(0deg) translateZ(-160px); }
-      50%  { transform: rotateX(68deg) rotateZ(-200deg) translateZ(-90px); }
-      100% { transform: rotateX(68deg) rotateZ(-360deg) translateZ(-160px); }
-    }
-
-    /* 纸屑容器 */
-    #confetti-container {
-      position: absolute;
+    /* 飘动的“上岸符咒”层 */
+    .charm-layer {
+      position: fixed;
       inset: 0;
+      overflow: hidden;
       pointer-events: none;
       z-index: 1;
-      overflow: hidden;
     }
 
-    .confetti {
+    .charm {
       position: absolute;
-      top: -12vh;
-      border-radius: 2px;
+      bottom: -3rem;
+      font-size: 1.08rem;
+      color: #ffeaa7;
+      text-shadow:
+        0 0 6px rgba(0, 0, 0, 0.45),
+        0 0 14px rgba(255, 234, 167, 0.9);
+      animation: floatUp 9s linear forwards;
       opacity: 0;
-      transform-origin: center;
-      animation: confetti-fall linear infinite;
-      will-change: transform, opacity;
     }
 
-    @keyframes confetti-fall {
+    @keyframes floatUp {
       0% {
-        transform: translate3d(0, -110vh, 0) rotateX(0deg) rotateZ(0deg);
+        transform: translateY(0) translateX(0) scale(0.9);
         opacity: 0;
       }
       10% {
         opacity: 1;
       }
-      100% {
-        transform: translate3d(0, 120vh, 0) rotateX(360deg) rotateZ(720deg);
-        opacity: 0;
-      }
-    }
-
-    /* 中间 3D 卡片 */
-    .card-3d {
-      position: relative;
-      z-index: 3;
-      width: min(560px, 92vw);
-      padding: 30px 32px 34px;
-      border-radius: 26px;
-      background: radial-gradient(circle at 0% 0%, rgba(255,255,255,0.35), rgba(255,255,255,0.06));
-      backdrop-filter: blur(18px);
-      box-shadow:
-        0 22px 45px rgba(0,0,0,0.35),
-        0 0 20px rgba(255,255,255,0.4);
-      transform-style: preserve-3d;
-      transform-origin: center;
-      transition: transform 0.35s ease-out, box-shadow 0.35s ease-out;
-      animation: card-in 1.1s ease-out forwards;
-      text-align: center;
-    }
-
-    .card-3d::before {
-      content: "";
-      position: absolute;
-      inset: -2px;
-      border-radius: inherit;
-      border: 1px solid rgba(255,255,255,0.7);
-      opacity: 0.5;
-      pointer-events: none;
-      mix-blend-mode: screen;
-    }
-
-    @keyframes card-in {
-      0% {
-        opacity: 0;
-        transform: translate3d(0, 50px, 0) scale(0.92) rotateX(10deg);
-      }
-      100% {
+      60% {
         opacity: 1;
-        transform: translate3d(0, 0, 0) scale(1) rotateX(0deg);
+      }
+      100% {
+        transform: translateY(-120vh) translateX(-30px) scale(1.2);
+        opacity: 0;
       }
     }
 
-    .layer-depth-3 { transform: translateZ(70px); }
-    .layer-depth-2 { transform: translateZ(45px); }
-    .layer-depth-1 { transform: translateZ(25px); }
-    .layer-depth-0 { transform: translateZ(5px); }
+    /* 中央卡片 */
+    .card {
+      position: relative;
+      z-index: 2;
+      width: min(92vw, 540px);
+      padding: 26px 24px 28px;
+      background: rgba(26, 10, 47, 0.78);
+      border-radius: 22px;
+      border: 1px solid rgba(255, 230, 250, 0.6);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(16px);
+      text-align: center;
+      animation: fadeInUp 1.1s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(26px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #ffd56b;
+      box-shadow: 0 0 10px rgba(255, 213, 107, 0.9);
+    }
+
+    .name {
+      font-size: 2.3rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      margin-bottom: 6px;
+    }
+
+    .big-wish {
+      font-size: 1.35rem;
+      margin-bottom: 10px;
+    }
+
+    .big-wish span.key {
+      font-size: 1.6rem;
+      font-weight: 800;
+      padding: 0 6px;
+      color: #ffeaa7;
+      text-shadow: 0 0 12px rgba(255, 234, 167, 0.95);
+    }
 
     .date-tag {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      font-size: 13px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-      background: rgba(0, 0, 0, 0.25);
-      box-shadow: 0 0 12px rgba(0,0,0,0.35);
-    }
-
-    .card-3d h1 {
-      font-size: 34px;
-      letter-spacing: 4px;
-      margin-bottom: 6px;
-      text-shadow:
-        0 0 10px rgba(0,0,0,0.6),
-        0 4px 10px rgba(0,0,0,0.5);
-    }
-
-    .card-3d h2 {
-      font-size: 20px;
-      margin-bottom: 18px;
-      font-weight: 500;
-      opacity: 0.95;
-    }
-
-    .highlight-name {
-      color: #ffe66d;
-      font-weight: 800;
-      text-shadow:
-        0 0 12px rgba(255,255,255,0.7),
-        0 0 20px rgba(255,230,109,0.9);
-    }
-
-    .cake {
-      font-size: 46px;
-      margin: 8px 0 6px;
-      animation: cake-breath 1.9s ease-in-out infinite;
-      filter: drop-shadow(0 0 10px rgba(255,255,255,0.9));
-    }
-
-    @keyframes cake-breath {
-      0%   { transform: translateZ(70px) translateY(0) scale(1);   opacity: 0.92; }
-      50%  { transform: translateZ(70px) translateY(-4px) scale(1.08); opacity: 1; }
-      100% { transform: translateZ(70px) translateY(0) scale(1);   opacity: 0.92; }
-    }
-
-    .typewriter {
-      margin: 8px auto 6px;
-      font-size: 16px;
-      line-height: 1.7;
-      min-height: 3.2em;
-      white-space: pre-wrap;
-      text-align: center;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.45);
-    }
-
-    .sub-text {
-      font-size: 13px;
-      opacity: 0.9;
-      margin-top: 4px;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
-    }
-
-    .footer {
-      margin-top: 20px;
-      font-size: 12px;
-      opacity: 0.9;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.45);
-    }
-
-    .footer span {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
       padding: 4px 10px;
       border-radius: 999px;
-      background: rgba(0, 0, 0, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(255, 230, 250, 0.8);
+      font-size: 0.82rem;
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .date-tag-icon {
+      font-size: 0.9rem;
+    }
+
+    #typewriter {
+      min-height: 6.5em;
+      margin: 6px auto 16px;
+      font-size: 0.98rem;
+      line-height: 1.7;
+      text-align: left;
+      white-space: pre-wrap;
+      text-indent: 2em;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 0.8ch;
+      border-right: 2px solid #ffeaa7;
+      animation: blink 0.8s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      50.01%, 100% { opacity: 0; }
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      color: #ffe0ff;
+    }
+
+    .subtitle.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .btn {
+      margin-top: 14px;
+      padding: 9px 20px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #ffe29f, #ffa99f, #f9c5d1);
+      color: #4a1a25;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+      transform: translateY(0);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.4s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.45);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 7px 18px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn.disabled {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .footer-note {
+      margin-top: 10px;
+      font-size: 0.82rem;
+      opacity: 0.82;
+    }
+
+    .status-badge {
+      margin-top: 6px;
+      font-size: 0.84rem;
+      color: #ffeaa7;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+
+    .status-badge.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .status-badge span {
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 230, 250, 0.8);
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(4px);
     }
 
     @media (max-width: 480px) {
-      .card-3d {
+      .card {
         padding: 22px 18px 24px;
-        border-radius: 20px;
       }
-      .card-3d h1 {
-        font-size: 26px;
-        letter-spacing: 2px;
+      .name {
+        font-size: 2rem;
       }
-      .card-3d h2 {
-        font-size: 16px;
+      .big-wish {
+        font-size: 1.22rem;
       }
-      .cake {
-        font-size: 38px;
+      .big-wish span.key {
+        font-size: 1.5rem;
+      }
+      #typewriter {
+        font-size: 0.92rem;
       }
     }
   </style>
 </head>
 <body>
-  <!-- 粒子光效画布 -->
-  <canvas id="particles"></canvas>
+  <!-- 柔和星光层 -->
+  <div class="star-layer"></div>
 
-  <div class="scene" id="scene">
-    <!-- 背景三维光环 -->
-    <div class="ring ring-1"></div>
-    <div class="ring ring-2"></div>
+  <!-- “上岸”符咒漂浮层 -->
+  <div class="charm-layer" id="charmLayer"></div>
 
-    <!-- 五彩纸屑 -->
-    <div id="confetti-container"></div>
+  <!-- 中央卡片 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="dot"></span>
+      <span>POSTGRAD EXAM BLESSING · 考研应援台</span>
+      <span class="dot"></span>
+    </div>
 
-    <!-- 3D 生日卡片 -->
-    <div class="card-3d" id="card3d">
-      <div class="date-tag layer-depth-1">🎂 BIRTHDAY · 12 · 25</div>
+    <div class="name">笑盈</div>
+    <div class="big-wish">
+      祝你 <span class="key">考研顺利上岸</span>，
+      一战成“硕”！
+    </div>
 
-      <h1 class="layer-depth-3">
-        <span class="highlight-name">叶星星</span> · 生日快乐
-      </h1>
+    <div class="date-tag">
+      <span class="date-tag-icon">📅</span>
+      <span>考试日：2025 年 12 月 20 日</span>
+    </div>
 
-      <h2 class="layer-depth-2">愿你的世界永远闪闪发光 ✨</h2>
+    <div id="typewriter"></div>
 
-      <div class="cake layer-depth-3">🎂</div>
+    <p class="subtitle" id="subtitle">
+      你走过的每一段自习室的路、做过的每一套卷子、记下的每一行笔记，<br>
+      都不会辜负你。<br>
+      放松心态，稳住节奏——考场上请相信自己，你已经足够优秀。
+    </p>
 
-      <div class="typewriter layer-depth-2" id="typewriter"></div>
-      <div class="sub-text layer-depth-1" id="sub-text"></div>
+    <button class="btn" id="blessBtn">点击开启考研上岸 Buff</button>
 
-      <div class="footer layer-depth-0">
-        <span id="today-text"></span>
-      </div>
+    <div class="status-badge" id="statusBadge">
+      <span>考研结果：好消息已在路上（静候录取通知）✅</span>
+    </div>
+
+    <div class="footer-note">
+      —— 来自那个一直希望和你一起迎接好消息的人
     </div>
   </div>
 
   <script>
-    // ========= 打字机效果 =========
-    const mainText =
-      "愿你眼里总有光芒，\n" +
-      "心中总存热爱。\n" +
-      "不必很完美，但一定要很快乐。";
+    // 祝福内容，可以按你想法再微调
+    const message =
+      "笑盈，\n" +
+      "2025 年 12 月 20 日，就要迎来你这一阶段最重要的一场战役。\n" +
+      "这一年里，你无数次走进自习室、图书馆，从清晨到深夜，把时间一点点换成底气。\n\n" +
+      "做过的每一套真题、背过的每一个知识点、\n" +
+      "每一次困到不行却又咬牙多坚持的半个小时，\n" +
+      "都悄悄地堆叠成了你现在的实力。\n\n" +
+      "请你相信自己：\n" +
+      "你并不是“运气好才考上”，而是已经足够努力、足够优秀，\n" +
+      "只需要在考场上正常发挥，把平时的你搬过去就好。\n\n" +
+      "愿你落笔有神、审题清晰、思路顺畅，\n" +
+      "选择题对的刚刚好，主观题写的都是心里有底的内容，\n" +
+      "每一道题都像是为你量身定做。\n\n" +
+      "无论结果怎样，我都站在你这边。\n" +
+      "但我更相信的是——\n" +
+      "这一次，你一定会考研上岸，在你想去的城市和学校遇见更闪耀的自己。";
 
-    const subText =
-      "From：一个一直在为你准备惊喜的人 💌";
+    const textEl = document.getElementById("typewriter");
+    const blessBtn = document.getElementById("blessBtn");
+    const charmLayer = document.getElementById("charmLayer");
+    const subtitle = document.getElementById("subtitle");
+    const statusBadge = document.getElementById("statusBadge");
 
-    const typewriterEl = document.getElementById("typewriter");
-    const subTextEl = document.getElementById("sub-text");
+    const cursorSpan = document.createElement("span");
+    cursorSpan.className = "cursor";
+    cursorSpan.innerHTML = "&nbsp;";
 
     let index = 0;
+    let typing = false;
+    let charmTimer = null;
+
     function typeWriter() {
-      if (index <= mainText.length) {
-        typewriterEl.textContent = mainText.slice(0, index);
-        const char = mainText.charAt(index);
+      if (index === 0) {
+        textEl.textContent = "";
+        textEl.appendChild(cursorSpan);
+      }
+
+      if (index < message.length) {
+        const ch = message.charAt(index);
+        cursorSpan.insertAdjacentText("beforebegin", ch);
         index++;
-        const delay = (char === "，" || char === "。" || char === "\n") ? 180 : 70;
+
+        let delay = 52;
+        if ("，。？！：；…".includes(ch)) {
+          delay = 240;
+        } else if (ch === "\n") {
+          delay = 170;
+        }
+
         setTimeout(typeWriter, delay);
       } else {
         setTimeout(() => {
-          subTextEl.textContent = subText;
-        }, 450);
+          cursorSpan.remove();
+          subtitle.classList.add("show");
+          statusBadge.classList.add("show");
+        }, 520);
       }
     }
-    typeWriter();
 
-    // ========= 日期 & 生日提示 =========
-    const todaySpan = document.getElementById("today-text");
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1;
-    const day = now.getDate();
+    function createCharm() {
+      const span = document.createElement("span");
+      span.className = "charm";
 
-    const pad = n => (n < 10 ? "0" + n : "" + n);
-    const todayStr = `${year}-${pad(month)}-${pad(day)}`;
+      // 随机内容：考研相关小符咒
+      const words = ["上岸", "必过", "稳了", "高分", "一志愿", "复试稳", "顺利录取"];
+      span.textContent = words[Math.floor(Math.random() * words.length)];
 
-    if (month === 12 && day === 25) {
-      todaySpan.textContent = `今天是 ${todayStr}，叶星星的生日，愿你所有的愿望都能一点点实现 ✨`;
-    } else {
-      todaySpan.textContent = `今天是 ${todayStr}，把这份页面当成提前/延后的惊喜祝福吧 💫`;
+      span.style.left = Math.random() * 100 + "%";
+      span.style.animationDuration = 6 + Math.random() * 4 + "s";
+
+      charmLayer.appendChild(span);
+
+      setTimeout(() => {
+        span.remove();
+      }, 11000);
     }
 
-    // ========= 多彩 3D 纸屑 =========
-    const confettiContainer = document.getElementById("confetti-container");
-    const confettiColors = [
-      "linear-gradient(180deg, #fff, #ffd6a5)",
-      "linear-gradient(180deg, #fff, #ffadad)",
-      "linear-gradient(180deg, #fff, #caffbf)",
-      "linear-gradient(180deg, #fff, #9bf6ff)",
-      "linear-gradient(180deg, #fff, #bdb2ff)"
-    ];
+    blessBtn.addEventListener("click", () => {
+      if (typing) return;
+      typing = true;
 
-    function createConfettiPiece() {
-      const piece = document.createElement("span");
-      piece.className = "confetti";
+      // 按钮淡出 + 背景开始轻微发光
+      blessBtn.classList.add("disabled");
+      document.body.classList.add("blessing");
 
-      const sizeW = 6 + Math.random() * 6;
-      const sizeH = 10 + Math.random() * 12;
-      piece.style.width = sizeW + "px";
-      piece.style.height = sizeH + "px";
+      // 先放一波“上岸符”
+      for (let i = 0; i < 10; i++) {
+        setTimeout(createCharm, i * 200);
+      }
+      charmTimer = setInterval(createCharm, 550);
 
-      const left = Math.random() * 100;
-      piece.style.left = left + "vw";
-
-      piece.style.animationDuration = (4 + Math.random() * 4) + "s";
-      piece.style.animationDelay = (-Math.random() * 6) + "s";
-
-      piece.style.backgroundImage =
-        confettiColors[Math.floor(Math.random() * confettiColors.length)];
-
-      confettiContainer.appendChild(piece);
-    }
-
-    for (let i = 0; i < 80; i++) {
-      createConfettiPiece();
-    }
-
-    // ========= 3D 卡片跟随鼠标倾斜 =========
-    const scene = document.getElementById("scene");
-    const card = document.getElementById("card3d");
-
-    scene.addEventListener("mousemove", (e) => {
-      const rect = scene.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const midX = rect.width / 2;
-      const midY = rect.height / 2;
-
-      const maxRotate = 14; // 最大旋转角度
-      const rotateY = ((x - midX) / midX) * maxRotate;   // 左右
-      const rotateX = (-(y - midY) / midY) * maxRotate;  // 上下
-
-      card.style.transform =
-        `rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg)`;
-      card.style.boxShadow =
-        `${-rotateY * 1.5}px ${18 + rotateX * 0.8}px 45px rgba(0,0,0,0.45)`;
+      // 启动打字机效果
+      setTimeout(typeWriter, 360);
     });
 
-    scene.addEventListener("mouseleave", () => {
-      card.style.transform = "rotateX(0deg) rotateY(0deg)";
-      card.style.boxShadow =
-        "0 22px 45px rgba(0,0,0,0.35), 0 0 20px rgba(255,255,255,0.4)";
+    window.addEventListener("beforeunload", () => {
+      if (charmTimer) clearInterval(charmTimer);
     });
-
-    // ========= 粒子光效 =========
-    const particleCanvas = document.getElementById("particles");
-    const pCtx = particleCanvas.getContext("2d");
-
-    let pWidth = window.innerWidth;
-    let pHeight = window.innerHeight;
-
-    function resizeParticles() {
-      pWidth = window.innerWidth;
-      pHeight = window.innerHeight;
-      particleCanvas.width = pWidth;
-      particleCanvas.height = pHeight;
-    }
-    resizeParticles();
-    window.addEventListener("resize", resizeParticles);
-
-    const particles = [];
-    const particleCount = 130;
-
-    function randomParticle() {
-      const angle = Math.random() * Math.PI * 2;
-      const speed = 0.15 + Math.random() * 0.45; // px / 帧
-      const radius = 1.2 + Math.random() * 2.4;
-      const colorType = Math.floor(Math.random() * 3);
-      let color;
-      // 粉、蓝、金三种主色系
-      if (colorType === 0) color = { r: 255, g: 183, b: 213 };
-      else if (colorType === 1) color = { r: 178, g: 235, b: 242 };
-      else color = { r: 255, g: 235, b: 148 };
-
-      return {
-        x: Math.random() * pWidth,
-        y: Math.random() * pHeight,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        r: radius,
-        alpha: 0.3 + Math.random() * 0.7,
-        color
-      };
-    }
-
-    for (let i = 0; i < particleCount; i++) {
-      particles.push(randomParticle());
-    }
-
-    function drawParticles() {
-      // 半透明遮罩做拖尾
-      pCtx.fillStyle = "rgba(2, 6, 23, 0.18)";
-      pCtx.fillRect(0, 0, pWidth, pHeight);
-
-      // 粒子
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-
-        // 轻微向上漂浮：让生日感更“升腾”
-        p.y -= 0.03;
-
-        // 出界重新随机
-        if (p.x < -50 || p.x > pWidth + 50 || p.y < -50 || p.y > pHeight + 50) {
-          particles[i] = randomParticle();
-          continue;
-        }
-
-        const gx = p.x;
-        const gy = p.y;
-        const gr = p.r * 4;
-
-        const gradient = pCtx.createRadialGradient(gx, gy, 0, gx, gy, gr);
-        gradient.addColorStop(0, `rgba(${p.color.r},${p.color.g},${p.color.b},${p.alpha})`);
-        gradient.addColorStop(1, `rgba(${p.color.r},${p.color.g},${p.color.b},0)`);
-
-        pCtx.beginPath();
-        pCtx.fillStyle = gradient;
-        pCtx.arc(gx, gy, gr, 0, Math.PI * 2);
-        pCtx.fill();
-      }
-
-      // 粒子之间的连线
-      pCtx.lineWidth = 0.4;
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const p1 = particles[i];
-          const p2 = particles[j];
-          const dx = p1.x - p2.x;
-          const dy = p1.y - p2.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          const maxDist = 90;
-          if (dist < maxDist) {
-            const alpha = (1 - dist / maxDist) * 0.28;
-            pCtx.strokeStyle = `rgba(255,255,255,${alpha.toFixed(3)})`;
-            pCtx.beginPath();
-            pCtx.moveTo(p1.x, p1.y);
-            pCtx.lineTo(p2.x, p2.y);
-            pCtx.stroke();
-          }
-        }
-      }
-
-      requestAnimationFrame(drawParticles);
-    }
-
-    drawParticles();
   </script>
 </body>
 </html>
